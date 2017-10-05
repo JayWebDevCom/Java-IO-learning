@@ -4,7 +4,8 @@ import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-public class SecondExample {
+class SecondExample {
+
     //    ^D - close the programs input stream on windows and linux
 
     private static Scanner sc = new Scanner(System.in);
@@ -13,7 +14,8 @@ public class SecondExample {
         try {
             int result = divide();
             System.out.println("The result is - " + result);
-        } catch (ArithmeticException e) {
+        } catch (ArithmeticException | NoSuchElementException e) {
+            // bitwise inclusive or - single pipe above
             System.out.println("error toString() - " + e.toString());
             System.out.println("Unable to perform division...");
         }

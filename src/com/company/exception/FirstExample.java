@@ -3,7 +3,13 @@ package com.company.exception;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class FirstExample {
+
+/*
+Checked Exceptions - can't be ignored - code wont compile
+Unchecked Exceptions - code will compile without handling
+ */
+
+class FirstExample {
     private static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
