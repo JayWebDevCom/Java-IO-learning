@@ -3,7 +3,7 @@ package com.company.exception;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class Main {
+public class FirstExample {
     private static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -33,8 +33,7 @@ public class Main {
     private static int getIntEAFP() {
         System.out.println("In EAFP - provide an int please >>");
         try {
-            int x = sc.nextInt();
-            return x;
+            return sc.nextInt();
         } catch (InputMismatchException e) { // specify the specific exception
             System.out.println(e.getMessage());
             System.out.println("Exception caught...");
