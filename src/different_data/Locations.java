@@ -46,9 +46,11 @@ public class Locations implements Map<Integer, Location> {
             e.getStackTrace();
 
         } finally {
+            System.out.println("In finally block");
 
             try {
-                if (fw != null) {
+                if (fw != null) { // wont try to close the file if try block fails
+                    System.out.println("Attempting to close the file");
                     fw.close();
                 }
             } catch (IOException e) {
