@@ -11,6 +11,8 @@ public class Main {
     // sequential access - a stream of data in a defined order
     // random access data - files and databases - retrieving as needed
 
+    // Catch or specify an exception
+
     private static Locations locations = new Locations();
 
     public static void main(String[] args) {

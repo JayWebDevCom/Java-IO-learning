@@ -32,33 +32,25 @@ public class Locations implements Map<Integer, Location> {
         locations.put(3, new Location(3, "This is the description of the fourth Location", tempExit));
     }
 
-    public static void main(String[] args) {
-        FileWriter fw = null;
+    public static void main(String[] args) throws IOException {
+        FileWriter fw = null; // declared outside the block because of scope limitations within the try block
         try {
             fw = new FileWriter("locations.txt");
 
             for (Location location : locations.values()) {
                 fw.write(location.getLocationID() + ", " + location.getDescription() + "\n");
-            }
-
-        } catch (IOException e) {
-            System.out.println(e.toString());
-            e.getStackTrace();
+            } // close for loop
 
         } finally {
             System.out.println("In finally block");
 
-            try {
-                if (fw != null) { // wont try to close the file if try block fails
-                    System.out.println("Attempting to close the file");
-                    fw.close();
-                }
-            } catch (IOException e) {
-                System.out.println(e.toString());
-                e.getStackTrace();
-            }
 
+            if (fw != null) { // wont try to close the file if try block fails
+                System.out.println("Attempting to close the file");
+                fw.close();
+            }
         }
+
     }
 
     @Override
