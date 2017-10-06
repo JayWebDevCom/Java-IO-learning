@@ -2,10 +2,7 @@ package different_data;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Locations implements Map<Integer, Location> {
 
@@ -33,24 +30,15 @@ public class Locations implements Map<Integer, Location> {
     }
 
     public static void main(String[] args) throws IOException {
-        FileWriter fw = null; // declared outside the block because of scope limitations within the try block
-        try {
-            fw = new FileWriter("locations.txt");
+        // try with resources - makes code more streamlined
+        // ensures that the first error is the one thrown back
+        // most likely that that error is the one to address
 
-            for (Location location : locations.values()) {
-                fw.write(location.getLocationID() + ", " + location.getDescription() + "\n");
-            } // close for loop
-
-        } finally {
-            System.out.println("In finally block");
-
-
-            if (fw != null) { // wont try to close the file if try block fails
-                System.out.println("Attempting to close the file");
-                fw.close();
+        try (FileWriter fw = new FileWriter("locations.txt")) {
+            for (Location l : locations.values()) {
+                fw.write(l.getLocationID() + ", " + l.getDescription());
             }
         }
-
     }
 
     @Override
