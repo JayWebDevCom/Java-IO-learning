@@ -34,11 +34,17 @@ public class Locations implements Map<Integer, Location> {
         // ensures that the first error is the one thrown back
         // most likely that that error is the one to address
 
-        try (FileWriter fw = new FileWriter("locations.txt")) {
-            for (Location l : locations.values()) {
-                fw.write(l.getLocationID() + ", " + l.getDescription());
+        try (FileWriter locationsFile = new FileWriter("locations.txt");
+             FileWriter directionsFile = new FileWriter("directions.txt")) {
+            for (Location location : locations.values()) {
+                locationsFile.write(location.getLocationID() + ", " + location.getDescription());
+                for (String direction : location.getExits().keySet()) {
+                    directionsFile.write(location.getLocationID() + ", " + direction + ", " + location.getExits().get(direction) + "\n");
+                }
             }
         }
+        // no longer necessary to close the FileWriter
+        // much tidier
     }
 
     @Override
