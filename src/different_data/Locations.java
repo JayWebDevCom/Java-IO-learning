@@ -1,5 +1,6 @@
 package different_data;
 
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
@@ -11,22 +12,28 @@ public class Locations implements Map<Integer, Location> {
 
     // static initialisation block executed only once
     static {
-        locations.put(0, new Location(0, "This is the description of the first Location", null));
+        Scanner sc = null;
+        try {
+            sc = new Scanner(new FileReader("locations.txt"));
+            sc.useDelimiter(", ");
 
-        Map<String, Integer> tempExit = new HashMap<>();
-        tempExit.put("W", 2);
-        tempExit.put("E", 3);
-        tempExit.put("S", 4);
-        tempExit.put("N", 5);
-        locations.put(1, new Location(1, "This is the description of the second Location", tempExit));
+            while (sc.hasNextLine()) {
+                int loc = sc.nextInt();
+                sc.skip(sc.delimiter());
+                String description = sc.nextLine();
+                System.out.println("Imported Location: " + loc + ": " + description);
 
-        tempExit.clear();
-        tempExit.put("N", 5);
-        locations.put(2, new Location(2, "This is the description of the third Location", tempExit));
+                Map<String, Integer> tempExit = new HashMap<>();
+                locations.put(loc, new Location(loc, description, tempExit));
+            }
 
-        tempExit.clear();
-        tempExit.put("W", 1);
-        locations.put(3, new Location(3, "This is the description of the fourth Location", tempExit));
+        } catch (IOException e) {
+            e.getStackTrace();
+        } finally {
+            if (sc != null) {
+                sc.close();
+            }
+        }
     }
 
     public static void main(String[] args) throws IOException {
@@ -37,7 +44,7 @@ public class Locations implements Map<Integer, Location> {
         try (FileWriter locationsFile = new FileWriter("locations.txt");
              FileWriter directionsFile = new FileWriter("directions.txt")) {
             for (Location location : locations.values()) {
-                locationsFile.write(location.getLocationID() + ", " + location.getDescription());
+                locationsFile.write(location.getLocationID() + ", " + location.getDescription() + "\n");
                 for (String direction : location.getExits().keySet()) {
                     directionsFile.write(location.getLocationID() + ", " + direction + ", " + location.getExits().get(direction) + "\n");
                 }
