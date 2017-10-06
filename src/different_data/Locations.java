@@ -31,7 +31,7 @@ public class Locations implements Map<Integer, Location> {
             e.getStackTrace();
         } finally {
             if (sc != null) {
-                sc.close();
+                sc.close(); // also closes the filereader (source) as long as the file reader implements closeable
             }
         }
     }
