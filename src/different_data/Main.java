@@ -2,6 +2,7 @@ package different_data;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
@@ -33,8 +34,8 @@ public class Main {
         vocabulary.put("WEST", "W");
         vocabulary.put("EAST", "E");
 
+        int loc = myRandom(1, 140);
 
-        int loc = 1;
         while(true) {
             System.out.println(locations.get(loc).getDescription());
 
@@ -68,5 +69,12 @@ public class Main {
             }
         }
 
+    }
+
+    private static int myRandom(int lowerBound, int upperBound) {
+        Random randomNum = new Random();
+        int myRandom = lowerBound + randomNum.nextInt(upperBound);
+        System.out.println("Random number generated is " + myRandom);
+        return myRandom;
     }
 }

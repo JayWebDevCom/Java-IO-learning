@@ -10,10 +10,11 @@ public class Locations implements Map<Integer, Location> {
 
     // static initialisation block executed only once
     static {
-        Scanner sc = null;
-        try {
-            sc = new Scanner(new FileReader("locations.txt"));
-            sc.useDelimiter(", ");
+        try(FileInputStream fi = new FileInputStream("locations_big.txt");
+            BufferedInputStream bi = new BufferedInputStream(fi);
+            Scanner sc = new Scanner(bi)
+        ) {
+            sc.useDelimiter(",");
 
             while (sc.hasNextLine()) {
                 int loc = sc.nextInt();
@@ -25,30 +26,21 @@ public class Locations implements Map<Integer, Location> {
                 Map<String, Integer> tempExit = new HashMap<>();
                 locations.put(loc, new Location(loc, description, tempExit));
             }
-
         } catch (IOException e) {
-            e.getStackTrace();
-        } finally {
-            if (sc != null) {
-                sc.close(); // also closes the filereader (source) as long as the file reader implements closeable
-            }
+            e.printStackTrace();
         }
 
-        try {
-            sc = new Scanner(new BufferedReader(new FileReader("directions.txt")));
-            sc.useDelimiter(", ");
+        try (FileInputStream fis = new FileInputStream("directions_big.txt");
+             BufferedInputStream bis = new BufferedInputStream(fis);
+             Scanner scanner = new Scanner(bis)
+        ) {
 
-            while (sc.hasNextLine()) {
+            scanner.useDelimiter(", ");
 
-//                int loc = sc.nextInt();
-//                sc.skip(sc.delimiter());
-//                String direction = sc.next();
-//                sc.skip(sc.delimiter());
-//                String destinationString = sc.nextLine();
-//                int destination = Integer.parseInt(destinationString);
+            while (scanner.hasNextLine()) {
 
-                String string = sc.nextLine(); // read entire line.
-                String[] data = string.split(", ");
+                String string = scanner.nextLine(); // read entire line.
+                String[] data = string.split(",");
                 int loc = Integer.parseInt(data[0]);
                 String direction = data[1];
                 int destination = Integer.parseInt(data[2]);
@@ -56,20 +48,11 @@ public class Locations implements Map<Integer, Location> {
                 System.out.println(loc + space() + direction + space() + destination);
                 Location location = locations.get(loc);
                 location.addExit(direction, destination);
-
             }
 
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (sc != null) {
-                // also closes the buffered reader because implements closeable
-                 sc.close();
-
-
-            }
         }
-
     }
 
     public static void main(String[] args) throws IOException {
