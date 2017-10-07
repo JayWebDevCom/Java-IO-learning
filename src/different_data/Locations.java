@@ -30,15 +30,13 @@ public class Locations implements Map<Integer, Location> {
         }
 
         try (FileReader fr = new FileReader("directions_big.txt");
-             BufferedReader bis = new BufferedReader(fr);
-             Scanner sc = new Scanner(bis)
+             BufferedReader bis = new BufferedReader(fr)
         ) {
-            sc.useDelimiter(", ");
+            String input;
 
-            while (sc.hasNextLine()) {
+            while ((input = bis.readLine()) != null) {
 
-                String string = sc.nextLine(); // read entire line.
-                String[] data = string.split(",");
+                String[] data = input.split(",");
                 int loc = Integer.parseInt(data[0]);
                 String direction = data[1];
                 int destination = Integer.parseInt(data[2]);
