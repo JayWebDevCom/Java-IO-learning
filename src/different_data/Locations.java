@@ -19,6 +19,7 @@ public class Locations implements Map<Integer, Location> {
                 int loc = sc.nextInt();
                 sc.skip(sc.delimiter());
                 String description = sc.nextLine();
+
                 System.out.println("Imported Location: " + loc + ": " + description);
 
                 Map<String, Integer> tempExit = new HashMap<>();
@@ -39,18 +40,21 @@ public class Locations implements Map<Integer, Location> {
 
             while (sc.hasNextLine()) {
 
-                int loc = sc.nextInt();
-                sc.skip(sc.delimiter());
-                String direction = sc.next();
-                sc.skip(sc.delimiter());
-                String destinationString = sc.nextLine();
+//                int loc = sc.nextInt();
+//                sc.skip(sc.delimiter());
+//                String direction = sc.next();
+//                sc.skip(sc.delimiter());
+//                String destinationString = sc.nextLine();
+//                int destination = Integer.parseInt(destinationString);
 
-                int destination = Integer.parseInt(destinationString);
+                String string = sc.nextLine(); // read entire line.
+                String[] data = string.split(", ");
+                int loc = Integer.parseInt(data[0]);
+                String direction = data[1];
+                int destination = Integer.parseInt(data[2]);
 
                 System.out.println(loc + space() + direction + space() + destination);
-
                 Location location = locations.get(loc);
-
                 location.addExit(direction, destination);
 
             }
