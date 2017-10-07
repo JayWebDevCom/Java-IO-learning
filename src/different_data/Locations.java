@@ -1,8 +1,6 @@
 package different_data;
 
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class Locations implements Map<Integer, Location> {
@@ -34,6 +32,40 @@ public class Locations implements Map<Integer, Location> {
                 sc.close(); // also closes the filereader (source) as long as the file reader implements closeable
             }
         }
+
+        try {
+            sc = new Scanner(new BufferedReader(new FileReader("directions.txt")));
+            sc.useDelimiter(", ");
+
+            while (sc.hasNextLine()) {
+
+                int loc = sc.nextInt();
+                sc.skip(sc.delimiter());
+                String direction = sc.next();
+                sc.skip(sc.delimiter());
+                String destinationString = sc.nextLine();
+
+                int destination = Integer.parseInt(destinationString);
+
+                System.out.println(loc + space() + direction + space() + destination);
+
+                Location location = locations.get(loc);
+
+                location.addExit(direction, destination);
+
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (sc != null) {
+                // also closes the buffered reader because implements closeable
+                 sc.close();
+
+
+            }
+        }
+
     }
 
     public static void main(String[] args) throws IOException {
@@ -52,6 +84,10 @@ public class Locations implements Map<Integer, Location> {
         }
         // no longer necessary to close the FileWriter
         // much tidier
+    }
+
+    private static String space(){
+        return  ": ";
     }
 
     @Override

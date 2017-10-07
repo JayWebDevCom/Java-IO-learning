@@ -37,4 +37,10 @@ public class Location {
     public Map<String, Integer> getExits() {
         return new HashMap<String, Integer>(exits);
     }
+
+    // available to package and subclasses
+    protected void addExit(String direction, int location) {
+        this.exits.put(direction, location);
+    }
+
 }
