@@ -10,9 +10,8 @@ public class Locations implements Map<Integer, Location> {
 
     // static initialisation block executed only once
     static {
-        try(FileInputStream fi = new FileInputStream("locations_big.txt");
-            BufferedInputStream bi = new BufferedInputStream(fi);
-            Scanner sc = new Scanner(bi)
+        try(FileReader fr = new FileReader("locations_big.txt");
+            Scanner sc = new Scanner(fr)
         ) {
             sc.useDelimiter(",");
 
@@ -30,16 +29,14 @@ public class Locations implements Map<Integer, Location> {
             e.printStackTrace();
         }
 
-        try (FileInputStream fis = new FileInputStream("directions_big.txt");
-             BufferedInputStream bis = new BufferedInputStream(fis);
-             Scanner scanner = new Scanner(bis)
+        try (FileReader fr = new FileReader("directions_big.txt");
+             Scanner sc = new Scanner(fr);
         ) {
+            sc.useDelimiter(", ");
 
-            scanner.useDelimiter(", ");
+            while (sc.hasNextLine()) {
 
-            while (scanner.hasNextLine()) {
-
-                String string = scanner.nextLine(); // read entire line.
+                String string = sc.nextLine(); // read entire line.
                 String[] data = string.split(",");
                 int loc = Integer.parseInt(data[0]);
                 String direction = data[1];
