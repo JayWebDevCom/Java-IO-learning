@@ -1,28 +1,31 @@
 package different_data;
 
 import java.io.*;
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class Locations implements Map<Integer, Location> {
 
-    private static Map<Integer, Location> locations = new HashMap<>();
+    private static Map<Integer, Location> locations = new LinkedHashMap<>();
     // only one instance shard across all instances
 
     // static initialisation block executed only once
     static {
         try(FileReader fr = new FileReader("locations_big.txt");
-            Scanner sc = new Scanner(fr)
+            BufferedReader br = new BufferedReader(fr)
         ) {
-            sc.useDelimiter(",");
+            String input;
+            while ((input = br.readLine()) != null ) {
 
-            while (sc.hasNextLine()) {
-                int loc = sc.nextInt();
-                sc.skip(sc.delimiter());
-                String description = sc.nextLine();
+                String[] data = input.split(",");
+                int loc = Integer.parseInt(data[0]);
+                String description = data[1];
 
                 System.out.println("Imported Location: " + loc + ": " + description);
 
-                Map<String, Integer> tempExit = new HashMap<>();
+                Map<String, Integer> tempExit = new LinkedHashMap<>();
                 locations.put(loc, new Location(loc, description, tempExit));
             }
         } catch (IOException e) {
@@ -30,11 +33,11 @@ public class Locations implements Map<Integer, Location> {
         }
 
         try (FileReader fr = new FileReader("directions_big.txt");
-             BufferedReader bis = new BufferedReader(fr)
+             BufferedReader br = new BufferedReader(fr)
         ) {
             String input;
 
-            while ((input = bis.readLine()) != null) {
+            while ((input = br.readLine()) != null) {
 
                 String[] data = input.split(",");
                 int loc = Integer.parseInt(data[0]);
@@ -52,21 +55,27 @@ public class Locations implements Map<Integer, Location> {
     }
 
     public static void main(String[] args) throws IOException {
-        // try with resources - makes code more streamlined
-        // ensures that the first error is the one thrown back
-        // most likely that that error is the one to address
 
-        try (FileWriter locationsFile = new FileWriter("locations.txt");
-             FileWriter directionsFile = new FileWriter("directions.txt")) {
+        try (BufferedWriter brLocations = new BufferedWriter(new FileWriter("locations.txt"));
+             BufferedWriter brDirections = new BufferedWriter(new FileWriter("directions.txt"))
+        ) {
+
             for (Location location : locations.values()) {
-                locationsFile.write(location.getLocationID() + ", " + location.getDescription() + "\n");
+                brLocations.write(location.getLocationID() + space() + location.getDescription() + newLine());
                 for (String direction : location.getExits().keySet()) {
-                    directionsFile.write(location.getLocationID() + ", " + direction + ", " + location.getExits().get(direction) + "\n");
+                    if (!direction.equalsIgnoreCase("Q")) {
+                        brDirections.write(location.getLocationID() + space() + direction + space() + location.getExits().get(direction) + newLine());
+                    }
                 }
             }
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        // no longer necessary to close the FileWriter
-        // much tidier
+    }
+
+    private static String newLine() {
+        return "\n";
     }
 
     private static String space(){

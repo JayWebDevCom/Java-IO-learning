@@ -1,6 +1,6 @@
 package different_data;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
@@ -22,19 +22,19 @@ public class Main {
         // The player should be able to type commands such as "Go West", "run South", or just "East"
         // and the program will move to the appropriate location if there is one.  As at present, an
         // attempt to move in an invalid direction should print a message and remain in the same place.
-        //
+
         // Single letter commands (N, W, S, E, Q) should still be available.
 
 	    Scanner scanner = new Scanner(System.in);
 
-        Map<String, String> vocabulary = new HashMap<>();
+        Map<String, String> vocabulary = new LinkedHashMap<>();
         vocabulary.put("QUIT", "Q");
         vocabulary.put("NORTH", "N");
         vocabulary.put("SOUTH", "S");
         vocabulary.put("WEST", "W");
         vocabulary.put("EAST", "E");
 
-        int loc = myRandom(1, 140);
+        int loc = randomNumber(1, 140);
 
         while(true) {
             System.out.println(locations.get(loc).getDescription());
@@ -71,7 +71,7 @@ public class Main {
 
     }
 
-    private static int myRandom(int lowerBound, int upperBound) {
+    private static int randomNumber(int lowerBound, int upperBound) {
         Random randomNum = new Random();
         int myRandom = lowerBound + randomNum.nextInt(upperBound);
         System.out.println("Random number generated is " + myRandom);
