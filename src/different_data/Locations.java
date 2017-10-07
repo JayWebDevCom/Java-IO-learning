@@ -30,7 +30,8 @@ public class Locations implements Map<Integer, Location> {
         }
 
         try (FileReader fr = new FileReader("directions_big.txt");
-             Scanner sc = new Scanner(fr);
+             BufferedReader bis = new BufferedReader(fr);
+             Scanner sc = new Scanner(bis)
         ) {
             sc.useDelimiter(", ");
 
