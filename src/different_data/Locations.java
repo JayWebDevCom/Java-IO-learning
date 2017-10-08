@@ -13,11 +13,11 @@ public class Locations implements Map<Integer, Location> {
 
     // static initialisation block executed only once
     static {
-        try(FileReader fr = new FileReader("locations_big.txt");
-            BufferedReader br = new BufferedReader(fr)
+        try (FileReader fr = new FileReader("locations_big.txt");
+             BufferedReader br = new BufferedReader(fr)
         ) {
             String input;
-            while ((input = br.readLine()) != null ) {
+            while ((input = br.readLine()) != null) {
 
                 String[] data = input.split(",");
                 int loc = Integer.parseInt(data[0]);
@@ -56,21 +56,36 @@ public class Locations implements Map<Integer, Location> {
 
     public static void main(String[] args) throws IOException {
 
-        try (BufferedWriter brLocations = new BufferedWriter(new FileWriter("locations.txt"));
-             BufferedWriter brDirections = new BufferedWriter(new FileWriter("directions.txt"))
+        // save the data read in in a binary format
+        // static initialization block can then read from the binary data bile
+        // adv - data no longer needs to br parsed because bytestream can write all binary/primitive types
+        // buffer the data using appropriate classes
+
+        try (FileOutputStream fos = new FileOutputStream("locations.dat");
+             BufferedOutputStream bos = new BufferedOutputStream(fos);
+             DataOutputStream locFile = new DataOutputStream(bos)
+             // automatically closes our resources
+             // no need to catch because method throws
+
         ) {
 
             for (Location location : locations.values()) {
-                brLocations.write(location.getLocationID() + space() + location.getDescription() + newLine());
+                locFile.write(location.getLocationID());
+                locFile.writeUTF(location.getDescription());
+
+                // sout's for debugging info
+                System.out.println("Writing location " + location.getLocationID() + colon() + location.getDescription());
+                System.out.println("Writing " + (location.getExits().size() - 1 + " exits"));
+                locFile.writeInt(location.getExits().size() - 1);
+
                 for (String direction : location.getExits().keySet()) {
                     if (!direction.equalsIgnoreCase("Q")) {
-                        brDirections.write(location.getLocationID() + space() + direction + space() + location.getExits().get(direction) + newLine());
+                        System.out.println("\t\t" + direction + "-" + location.getExits().get(direction));
+                        locFile.writeUTF(direction);
+                        locFile.writeInt(location.getExits().get(direction));
                     }
                 }
             }
-
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -78,8 +93,12 @@ public class Locations implements Map<Integer, Location> {
         return "\n";
     }
 
-    private static String space(){
-        return  ": ";
+    private static String colon() {
+        return " : ";
+    }
+
+    private static String space() {
+        return ": ";
     }
 
     @Override
