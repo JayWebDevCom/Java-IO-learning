@@ -13,45 +13,36 @@ public class Locations implements Map<Integer, Location> {
 
     // static initialisation block executed only once
     static {
-        try (FileReader fr = new FileReader("locations_big.txt");
-             BufferedReader br = new BufferedReader(fr)
+        try (FileInputStream fis = new FileInputStream("locations.dat");
+             BufferedInputStream bis = new BufferedInputStream(fis);
+             DataInputStream locFile = new DataInputStream(bis)
         ) {
-            String input;
-            while ((input = br.readLine()) != null) {
+            while (true) { // IOException will cause while loop to be broken
 
-                String[] data = input.split(",");
-                int loc = Integer.parseInt(data[0]);
-                String description = data[1];
+                Map<String, Integer> exits = new LinkedHashMap<>();
+                int locId = locFile.readInt();
+                String description = locFile.readUTF();
+                System.out.println("description is " + description);
 
-                System.out.println("Imported Location: " + loc + ": " + description);
+                int numExits = locFile.readInt();
+                System.out.println("Read location " + locId + colon() + description);
+                System.out.println("Found " + numExits + " exits");
 
-                Map<String, Integer> tempExit = new LinkedHashMap<>();
-                locations.put(loc, new Location(loc, description, tempExit));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+                for (int i = 0; i < numExits; i++) {
+                    String direction = locFile.readUTF();
+                    int destination = locFile.readInt();
+                    exits.put(direction, destination);
+                    System.out.println("\t\t" + direction + space() + description);
+                }
 
-        try (FileReader fr = new FileReader("directions_big.txt");
-             BufferedReader br = new BufferedReader(fr)
-        ) {
-            String input;
-
-            while ((input = br.readLine()) != null) {
-
-                String[] data = input.split(",");
-                int loc = Integer.parseInt(data[0]);
-                String direction = data[1];
-                int destination = Integer.parseInt(data[2]);
-
-                System.out.println(loc + space() + direction + space() + destination);
-                Location location = locations.get(loc);
-                location.addExit(direction, destination);
+                locations.put(locId, new Location(locId, description, exits));
             }
 
         } catch (IOException e) {
+            System.out.println("IOException... ");
             e.printStackTrace();
         }
+
     }
 
     public static void main(String[] args) throws IOException {
@@ -70,7 +61,7 @@ public class Locations implements Map<Integer, Location> {
         ) {
 
             for (Location location : locations.values()) {
-                locFile.write(location.getLocationID());
+                locFile.writeInt(location.getLocationID());
                 locFile.writeUTF(location.getDescription());
 
                 // sout's for debugging info
@@ -80,7 +71,7 @@ public class Locations implements Map<Integer, Location> {
 
                 for (String direction : location.getExits().keySet()) {
                     if (!direction.equalsIgnoreCase("Q")) {
-                        System.out.println("\t\t" + direction + "-" + location.getExits().get(direction));
+                        System.out.println("\t\t" + direction + " - " + location.getExits().get(direction));
                         locFile.writeUTF(direction);
                         locFile.writeInt(location.getExits().get(direction));
                     }
